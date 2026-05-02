@@ -21,6 +21,7 @@ from django.urls import path, include
 from django.http import HttpResponse
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from core import views_frontend
+from core.views_frontend import logout_view
 
 # 🌐 Simple homepage (optional)
 def home(request):
@@ -33,8 +34,8 @@ urlpatterns = [
     path('dashboard/', views_frontend.dashboard),
     path('projects-ui/', views_frontend.projects_page),
     path('tasks-ui/', views_frontend.tasks_page),
-
-    # 🛠 Admin
+    path('logout/', logout_view),
+    path('signup/', views_frontend.signup_page), # 🛠 Admin
     path('admin/', admin.site.urls),
 
     # 📦 APIs

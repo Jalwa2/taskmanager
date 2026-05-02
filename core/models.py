@@ -1,8 +1,7 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
-
-# 👤 1. USER MODEL (FIRST)
+# 👤 USER MODEL (ROLE SYSTEM)
 class User(AbstractUser):
     ROLE_CHOICES = (
         ('admin', 'Admin'),
@@ -11,18 +10,17 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='member')
 
 
-# 📁 2. PROJECT MODEL (JUST BELOW USER)
+# 📁 PROJECT MODEL
 class Project(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_projects")
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # team members
     members = models.ManyToManyField(User, related_name="projects")
 
-    def __str__(self):
-        return self.name
 
-
-# ✅ 3. TASK MODEL (BELOW PROJECT)
+# ✅ TASK MODEL
 class Task(models.Model):
     STATUS_CHOICES = (
         ('pending', 'Pending'),
@@ -31,11 +29,9 @@ class Task(models.Model):
     )
 
     title = models.CharField(max_length=100)
-    description = models.TextField()
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name="tasks")
-    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tasks")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    deadline = models.DateField()
 
-    def __str__(self):
-        return self.title
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    assigned_to = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    deadline = models.DateField()
